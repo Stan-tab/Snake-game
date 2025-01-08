@@ -4,8 +4,11 @@ pixeling(size);
 let xPixel;
 let randomArr = [];
 const pixels = [...document.querySelectorAll("div > * > *")];
+let prevKey;
+let shortX = 16;
+let shortY = 16;
 
-function pixeling(size=32) {
+function pixeling(size) {
     for(let i = 0; i<size; i++) {
         const aciss = document.createElement("div");
         aciss.classList = "y" + +(i+1);
@@ -32,38 +35,57 @@ function coordinates(xCor, yCor) {
 }
 
 window.addEventListener("keypress", (e) => {
-    if(e.key.toLowerCase() == "d") { //right
-        if (randomArr.length >= 3) {
-            randomArr.shift().style.backgroundColor = "lightslategrey";
-        }
-        randomArr.push(coordinates(shortX, shortY))
-        coordinates(shortX, shortY).style.backgroundColor = "red";
-        shortX += 1;
-    } else if(e.key.toLowerCase() == "a") { //left
-    } else if(e.key.toLowerCase() == "w") { //up
-    } else if(e.key.toLowerCase() == "s") { //down
+    place();
+    if((e.key.toLowerCase() == "d" || prevKey == "d") && prevKey != "a") { //right
+        // shortX += 1;
+        prevKey = "d";
+    } else if((e.key.toLowerCase() == "a" || prevKey == "a") && prevKey != "d") { //left
+        // shortX -= 1;
+        prevKey = "a";
+    } else if((e.key.toLowerCase() == "w" || prevKey == "w") && prevKey != "s") { //up
+        // shortY -= 1;
+        prevKey = "w";
+    } else if((e.key.toLowerCase() == "s" || prevKey == "s") && prevKey != "w") { //down
+        // shortY += 1;
+        prevKey = "s";
     }
 });
 
-let shortX = 1;
-let shortY = 1;
+function place(someDiv, maxSize = 32) {
+    const forCount = pixels.indexOf(someDiv) + 1;
+    if (forCount % maxSize == 0) {
+        return [shortX = 32, shortY = forCount/maxSize];
+    } else {
+        return [shortX = forCount%maxSize, shortY = Math.floor(forCount/maxSize)+1]; 
+    }
+}
+
+function move() {
+    if (randomArr.length >= 3) {
+        randomArr.shift().style.backgroundColor = "lightslategrey";
+    };
+    randomArr.push(coordinates(shortX, shortY));
+    coordinates(shortX, shortY).style.backgroundColor = "red";
+}
+
+function moveSide(way = "d") {
+    if(way == "d") { //right
+        shortX += 1;
+    } else if(way == "a") { //left
+        shortX -= 1;
+    } else if(way == "w") { //up
+        shortY -= 1;
+    } else if(way == "s") { //down
+        shortY += 1;
+    }
+    if(shortX >= 33 || shortY >= 33 || shortX <= -1 || shortY <= -1) {shortX = 1, shortY = 1};
+}
 
 function FPS(fps = 30) {
     setInterval(() => {
-        if(shortY == 33) {
-            shortY = 1;
-        }
-        if (randomArr.length >= 3) {
-            randomArr.shift().style.backgroundColor = "lightslategrey";
-        }
-        randomArr.push(coordinates(shortX, shortY))
-        coordinates(shortX, shortY).style.backgroundColor = "red";
-        shortX += 1;
-        if(shortX > 32) {
-            shortY += 1;
-            shortX = 1;
-        }
-        // console.log(randomArr);
+        coordinates(shortX, shortY);
+        moveSide(prevKey);
+        move();
     }, 1000/fps)
 }
 
