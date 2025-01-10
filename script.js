@@ -1,13 +1,19 @@
 const mainBox = document.querySelector(".mainBox");
 const size = 32;
+const finisher = document.createElement("div"); //important
 pixeling(size);
 let xPixel;
+let applePlace;
 let randomArr = [];
 const pixels = [...document.querySelectorAll("div > * > *")];
 let prevKey;
 let shortX = 16;
+let lgt = 3;
 let shortY = 16;
 
+finisher.classList = "ender";
+finisher.textContent = "You suck!!";
+mainBox.appendChild(finisher);
 function pixeling(size) {
     for(let i = 0; i<size; i++) {
         const aciss = document.createElement("div");
@@ -26,7 +32,15 @@ function pixeling(size) {
     return;
 };
 
+function apple() {
+    applePlace = pixels[Math.floor(Math.random() * size * size)];
+    if (applePlace.style.backgroundColor == "red") {applePlace = pixels[Math.floor(Math.random() * size * size)];};
+    applePlace.style.backgroundColor = "orange";
+}
+
 function coordinates(xCor, yCor) {
+    if(xCor == 0) {xCor = 1};
+    if(yCor == 0) {yCor = 1};
     xPixel = document.querySelector(`.x${xCor}.y${yCor}`);
     if (!xPixel) {
         return console.error("lala");
@@ -35,17 +49,16 @@ function coordinates(xCor, yCor) {
 }
 
 window.addEventListener("keypress", (e) => {
-    place();
-    if((e.key.toLowerCase() == "d" || prevKey == "d") && prevKey != "a") { //right
+    if((e.key.toLowerCase() == "d") && prevKey != "a") { //right
         // shortX += 1;
         prevKey = "d";
-    } else if((e.key.toLowerCase() == "a" || prevKey == "a") && prevKey != "d") { //left
+    } else if((e.key.toLowerCase() == "a") && prevKey != "d") { //left
         // shortX -= 1;
         prevKey = "a";
-    } else if((e.key.toLowerCase() == "w" || prevKey == "w") && prevKey != "s") { //up
+    } else if((e.key.toLowerCase() == "w") && prevKey != "s") { //up
         // shortY -= 1;
         prevKey = "w";
-    } else if((e.key.toLowerCase() == "s" || prevKey == "s") && prevKey != "w") { //down
+    } else if((e.key.toLowerCase() == "s") && prevKey != "w") { //down
         // shortY += 1;
         prevKey = "s";
     }
@@ -61,10 +74,11 @@ function place(someDiv, maxSize = 32) {
 }
 
 function move() {
-    if (randomArr.length >= 3) {
+    if (randomArr.length >= lgt) {
         randomArr.shift().style.backgroundColor = "lightslategrey";
     };
     randomArr.push(coordinates(shortX, shortY));
+    if(coordinates(shortX, shortY).style.backgroundColor == "red") {finishing();};
     coordinates(shortX, shortY).style.backgroundColor = "red";
 }
 
@@ -78,14 +92,23 @@ function moveSide(way = "d") {
     } else if(way == "s") { //down
         shortY += 1;
     }
-    if(shortX >= 33 || shortY >= 33 || shortX <= -1 || shortY <= -1) {shortX = 1, shortY = 1};
+    if(shortX >= 33 || shortY >= 33 || shortX <= -1 || shortY <= -1) {shortX = 1; shortY = 1; finishing()};
+}
+
+function finishing() {
+    finisher.style.display = "block";
 }
 
 function FPS(fps = 30) {
+    apple();
     setInterval(() => {
         coordinates(shortX, shortY);
         moveSide(prevKey);
         move();
+        if(xPixel == applePlace) {
+            lgt += 1;
+            apple();
+        }
     }, 1000/fps)
 }
 

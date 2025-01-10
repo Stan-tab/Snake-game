@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake game</title>
     <style>
+        :root {
+            --width-height: 360px;
+        }
         body {
             height: 100vh;
         }
         .mainBox {
             display: flex;
             margin: auto;
-            width: 360px;
-            height: 360px;
+            width: var(--width-height);
+            height: var(--width-height);
             background-color: lightslategrey;
             flex-direction: column;
             border: 2px groove black;
@@ -21,6 +24,19 @@
             display: flex;
             flex: 1;
             background-color: lightslategray;
+        }
+        .ender {
+            position: absolute;
+            width: var(--width-height);
+            height: var(--width-height);
+            background-color: grey;
+            text-align: center;
+            padding-top: calc(var(--width-height)/9);
+            font-size: calc(var(--width-height)/15);
+            font-weight: 900;
+            color: rgb(164, 181, 196);
+            box-sizing: border-box;
+            display: none;
         }
     </style>
     <script src="./script.js" defer></script>
