@@ -6,10 +6,12 @@ let xPixel;
 let applePlace;
 let randomArr = [];
 const pixels = [...document.querySelectorAll("div > * > *")];
+const btns = [...document.querySelectorAll(".btns button")];
 let prevKey;
 let shortX = 16;
 let lgt = 3;
 let shortY = 16;
+btnlis();
 
 finisher.classList = "ender";
 finisher.textContent = "You suck!!";
@@ -31,6 +33,14 @@ function pixeling(size) {
     });
     return;
 };
+
+function btnlis() {
+    btns.forEach(bt => {
+        bt.addEventListener("click", () => {
+            prevKey = bt.value;
+        })
+    });
+}
 
 function apple() {
     applePlace = pixels[Math.floor(Math.random() * size * size)];
