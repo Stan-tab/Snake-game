@@ -7,7 +7,7 @@ let applePlace;
 let randomArr = [];
 const pixels = [...document.querySelectorAll("div > * > *")];
 const btns = [...document.querySelectorAll(".btns button")];
-let prevKey;
+let prevKey = "d";
 let shortX = 16;
 let lgt = 3;
 let shortY = 16;
@@ -37,7 +37,19 @@ function pixeling(size) {
 function btnlis() {
     btns.forEach(bt => {
         bt.addEventListener("click", () => {
-            prevKey = bt.value;
+            if((bt.value.toLowerCase() == "d") && prevKey != "a") { //right
+                // shortX += 1;
+                prevKey = "d";
+            } else if((bt.value.toLowerCase() == "a") && prevKey != "d") { //left
+                // shortX -= 1;
+                prevKey = "a";
+            } else if((bt.value.toLowerCase() == "w") && prevKey != "s") { //up
+                // shortY -= 1;
+                prevKey = "w";
+            } else if((bt.value.toLowerCase() == "s") && prevKey != "w") { //down
+                // shortY += 1;
+                prevKey = "s";
+            }
         })
     });
 }
